@@ -23,7 +23,12 @@ function Login() {
       login(res.data.user, res.data.token);
       setLoggedIn(true);
     } catch (err) {
-      setError(err.response?.data?.error || 'Something went wrong. Try again.');
+      // Handle browser extension interference
+      if (err.message && err.message.includes('message channel closed')) {
+        setError('Login failed due to browser extension interference. Please try disabling browser extensions or use an incognito window.');
+      } else {
+        setError(err.response?.data?.error || 'Something went wrong. Try again.');
+      }
     } finally {
       setLoading(false);
     }
