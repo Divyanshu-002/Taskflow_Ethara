@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../api';
 import './Auth.css';
@@ -9,9 +9,9 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const { login } = useAuth();
-  const navigate = useNavigate();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -21,12 +21,16 @@ function Login() {
     try {
       const res = await API.post('/auth/login', { email, password });
       login(res.data.user, res.data.token);
-      navigate('/dashboard');
+      setLoggedIn(true);
     } catch (err) {
       setError(err.response?.data?.error || 'Something went wrong. Try again.');
     } finally {
       setLoading(false);
     }
+  }
+
+  if (loggedIn) {
+    return <Navigate to="/dashboard" />;
   }
 
   return (
