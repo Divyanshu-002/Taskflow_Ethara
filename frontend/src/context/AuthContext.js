@@ -12,10 +12,17 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
-    if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+
+    if (savedToken && savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
+      try {
+        setToken(savedToken);
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.warn('Invalid saved user data in localStorage, clearing it.', error);
+        localStorage.removeItem('user');
+      }
     }
+
     setLoading(false);
   }, []);
 
