@@ -32,11 +32,11 @@ function Projects() {
     setError('');
     setSubmitting(true);
     try {
-      await API.post('/projects', { name, description });
+      const res = await API.post('/projects', { name, description });
+      setProjects(prevProjects => [res.data.project, ...prevProjects]);
       setName('');
       setDescription('');
       setShowForm(false);
-      fetchProjects(); // Refresh list
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create project.');
     } finally {
